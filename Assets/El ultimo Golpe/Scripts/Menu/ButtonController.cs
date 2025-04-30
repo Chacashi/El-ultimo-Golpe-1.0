@@ -1,10 +1,13 @@
-using Unity.VisualScripting;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 abstract public class ButtonController : MonoBehaviour,IPointerEnterHandler, IPointerExitHandler
 {
+    private Vector2 initialScale;
+    [SerializeField] protected float timeScale;
+    [SerializeField] protected Vector2 valueScale;
     protected Button myButton;
 
 
@@ -15,17 +18,18 @@ abstract public class ButtonController : MonoBehaviour,IPointerEnterHandler, IPo
 
     protected virtual void Start()
     {
+        initialScale = transform.localScale;
         myButton.onClick.AddListener(Interactue);
     }
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-
+        transform.DOScale(valueScale, timeScale);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-
+        transform.DOScale(initialScale, timeScale);
     }
 
     protected abstract void Interactue();
