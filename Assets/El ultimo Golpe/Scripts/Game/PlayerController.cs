@@ -1,16 +1,28 @@
 using UnityEngine;
-
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private Rigidbody rb;
+    private Vector2 movementPlayer;
+    [SerializeField] private float velocity;
+    private void Awake()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
-
-    // Update is called once per frame
-    void Update()
+    private void MovementPlayer(Vector2 value)
     {
-        
+        movementPlayer = value;
+    }
+    private void FixedUpdate()
+    {
+        rb.linearVelocity = new Vector3(movementPlayer.x * velocity, rb.linearVelocity.y, movementPlayer.y * velocity);
+    }
+    private void OnEnable()
+    {
+        InputReader.movementPlayer += MovementPlayer;
+    }
+    private void OnDisable()
+    {
+        InputReader.movementPlayer -= MovementPlayer;
     }
 }
