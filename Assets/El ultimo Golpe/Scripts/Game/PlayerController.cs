@@ -3,19 +3,31 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
-    private Vector2 movementPlayer;
+    private Vector2 movementInput;
     [SerializeField] private float velocity;
+    [SerializeField] private Transform cameraTransform; 
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
     private void MovementPlayer(Vector2 value)
     {
-        movementPlayer = value;
+        movementInput = value;
     }
     private void FixedUpdate()
     {
-        rb.linearVelocity = new Vector3(movementPlayer.x * velocity, rb.linearVelocity.y, movementPlayer.y * velocity);
+        Vector3 cameraForward = cameraTransform.forward;
+        Vector3 cameraRight = cameraTransform.right;
+
+        cameraForward.y = 0;
+        cameraRight.y = 0;
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        Vector3 movementDirection = cameraRight * movementInput.x + cameraForward * movementInput.y;
+
+        rb.linearVelocity = new Vector3(movementDirection.x * velocity, rb.linearVelocity.y, movementDirection.z * velocity);
     }
     private void OnEnable()
     {
